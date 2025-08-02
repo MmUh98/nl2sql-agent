@@ -3,7 +3,7 @@
 import sqlite3 from "sqlite3";
 import { customerTable, orderTable } from "./constants";
 
-const db = new sqlite3.Database('":memory:"');
+const db = new sqlite3.Database('./data.sqlite');
 
 export async function seed() {
   db.serialize(() => {
