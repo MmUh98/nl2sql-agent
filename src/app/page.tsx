@@ -27,9 +27,7 @@ export default function Home() {
   ]);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    seed();
-  });
+  // Removed client-side seeding. Seed the database manually or on server startup if needed.
 
   async function sendMessage() {
     setIsLoading(true);
@@ -58,14 +56,14 @@ export default function Home() {
       <header className="bg-white p-2">
         <div className="flex lg:flex-1 items-center justify-center">
           <a href="#" className="m-1.5">
-            <span className="sr-only">Text-to-SQL Agent</span>
+            <span className="sr-only">Natural-Language-to-SQL Agent</span>
             <img
               className="h-8 w-auto"
               src="/openai.svg"
               alt="OpenAI Logo"
             />
           </a>
-          <h1 className="text-black font-bold">Text-to-SQL Agent</h1>
+          <h1 className="text-black font-bold">Natural-Language-to-SQL Agent</h1>
         </div>
       </header>
       <div className="flex flex-col h-full">

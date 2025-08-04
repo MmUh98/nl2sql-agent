@@ -9,11 +9,12 @@ import {
   StoredMessage,
 } from "@langchain/core/messages";
 import { execute } from "./database";
-import { customerTable, orderTable } from "./constants";
 
 export async function message(messages: StoredMessage[]) {
   const deserialized = mapStoredMessagesToChatMessages(messages);
 
+  
+  // @ts-expect-error: Type instantiation is excessively deep and possibly infinite (ts2589)
   const getFromDB = tool(
     async (input) => {
       if (input?.sql) {
@@ -27,11 +28,7 @@ export async function message(messages: StoredMessage[]) {
     },
     {
       name: "get_from_db",
-      description: `Get data from a database, the database has the following schema:
-  
-      ${orderTable}
-      ${customerTable}  
-      `,
+      description: `Get data from a database. The database has tables defined in the schema loaded from sample-model.sql.`,
       schema: z.object({
         sql: z
           .string()
