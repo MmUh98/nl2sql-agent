@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+
+# NL2SQL Agent
+
+This is a Next.js project that converts natural language queries to SQL and retrieves results from a SQLite database. It features a chat UI with:
+
+- AI-powered SQL generation and database querying
+- Table rendering for structured responses
+- Copy, Download CSV, and Download Excel buttons for tabular results
+
+## Features
+
+- **Natural language to SQL**: Enter questions in plain English, get SQL queries and results.
+- **Table rendering**: Results are shown as tables when possible.
+- **Download options**: Export results as CSV or Excel (`.xlsx`) files using the [xlsx](https://www.npmjs.com/package/xlsx) package.
+- **Copy to clipboard**: One-click copy for any response.
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Usage
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Type a question (e.g., "Give me first 5 customer names") and press Send.
+- If the response is a table or list, use the Copy, Download CSV, or Download Excel buttons below the response.
 
-## Learn More
+## Dependencies
 
-To learn more about Next.js, take a look at the following resources:
+- next
+- react
+- sqlite3
+- xlsx (for Excel export)
+- tailwindcss
+- langchain
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## License
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT
