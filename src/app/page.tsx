@@ -10,6 +10,7 @@ import {
 } from "@langchain/core/messages";
 // import { message } from "./actions";
 import { seed } from "./database";
+import SmartResponseRenderer from "@/components/SmartResponseRenderer";
 
 export default function Home() {
   const [inputMessage, setInputMessage] = useState("");
@@ -52,7 +53,7 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col h-screen justify-between">
+    <div className="flex flex-col h-screen">
       <header className="bg-white p-2">
         <div className="flex lg:flex-1 items-center justify-center">
           <a href="#" className="m-1.5">
@@ -66,48 +67,50 @@ export default function Home() {
           <h1 className="text-black font-bold">Natural-Language-to-SQL Agent</h1>
         </div>
       </header>
-      <div className="flex flex-col h-full">
-        {messages.length > 0 &&
-          messages.map((message, index) => {
-            if (message instanceof HumanMessage) {
-              return (
-                <div
-                  key={message.getType() + index}
-                  className="col-start-1 col-end-8 p-3 rounded-lg"
-                >
-                  <div className="flex flex-row items-center">
-                    <div className="flex items-center justify-center h-8 w-8 rounded-full bg-orange-400 text-white flex-shrink-0 text-sm">
-                      Me
-                    </div>
-                    <div className="relative ml-3 text-sm bg-white text-black py-2 px-4 shadow rounded-xl">
-                      <div>{message.content as string}</div>
+      <div className="flex-1 overflow-y-auto bg-gray-100 p-6">
+        <div className="flex flex-col">
+          {messages.length > 0 &&
+            messages.map((message, index) => {
+              if (message instanceof HumanMessage) {
+                return (
+                  <div
+                    key={message.getType() + index}
+                    className="col-start-1 col-end-8 p-3 rounded-lg"
+                  >
+                    <div className="flex flex-row items-center">
+                      <div className="flex items-center justify-center h-8 w-8 rounded-full bg-orange-400 text-white flex-shrink-0 text-sm">
+                        Me
+                      </div>
+                      <div className="relative ml-3 text-sm bg-white text-black py-2 px-4 shadow rounded-xl">
+                        <div>{message.content as string}</div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            }
+                );
+              }
 
-            if (message instanceof AIMessage) {
-              return (
-                <div
-                  key={message.getType() + index}
-                  className="col-start-6 col-end-13 p-3 rounded-lg"
-                >
-                  <div className="flex items-center justify-start flex-row-reverse">
-                    <div className="flex items-center justify-center h-8 w-8 rounded-full bg-green-400 flex-shrink-0 text-sm">
-                      AI
-                    </div>
-                    <div className="relative mr-3 text-sm bg-white text-black py-2 px-4 shadow rounded-xl">
-                      <div>{message.content as string}</div>
+              if (message instanceof AIMessage) {
+                return (
+                  <div
+                    key={message.getType() + index}
+                    className="col-start-6 col-end-13 p-3 rounded-lg"
+                  >
+                    <div className="flex items-center justify-start flex-row-reverse">
+                      <div className="flex items-center justify-center h-8 w-8 rounded-full bg-green-400 flex-shrink-0 text-sm">
+                        AI
+                      </div>
+                      <div className="relative mr-3 text-sm bg-white text-black py-2 px-4 shadow rounded-xl min-w-[250px]">
+                        <SmartResponseRenderer response={message.content as string} />
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            }
-          })}
+                );
+              }
+            })}
+        </div>
       </div>
-      <div className="flex flex-col flex-auto justify-between bg-gray-100 p-6">
-        <div className="top-[100vh] flex flex-row items-center h-16 rounded-xl bg-white w-full px-4">
+      <div className="bg-white p-6">
+        <div className="flex flex-row items-center h-16 rounded-xl w-full">
           <div className="flex-grow ml-4">
             <div className="relative w-full">
               <input
