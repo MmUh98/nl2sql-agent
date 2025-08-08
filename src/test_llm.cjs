@@ -4,7 +4,7 @@ const { AzureChatOpenAI } = require("@langchain/openai");
 async function testLLM() {
   const llm = new AzureChatOpenAI({
     azureOpenAIApiKey: process.env.OPENAI_API_KEY,
-    azureOpenAIApiInstanceName: "manso-mdfm2cer", // Extracted from your endpoint
+    azureOpenAIApiInstanceName: "manso-mdfm2cer", 
     azureOpenAIApiDeploymentName: process.env.OPENAI_DEPLOYMENT_NAME,
     azureOpenAIApiVersion: process.env.OPENAI_API_VERSION,
     temperature: 0,

@@ -8,27 +8,26 @@ import {
   AIMessage,
   mapChatMessagesToStoredMessages,
 } from "@langchain/core/messages";
-// import { message } from "./actions";
-import { seed } from "./database";
+
 import SmartResponseRenderer from "@/components/SmartResponseRenderer";
 
 export default function Home() {
   const [inputMessage, setInputMessage] = useState("");
   const [messages, setMessages] = useState<BaseMessage[]>([
     new SystemMessage(`
-      You are an expert SQL assistant. Your task is to generate SQL queries based on user requests. Follow these strict formatting guidelines:
-        
-      You should create a SQLite query based on natural language. 
-      Use the "getFromDB" tool to get data from a database.
+      You are an expert SQL assistant. When a user asks a question, generate the appropriate SQL Server (T-SQL) query and use the get_from_db tool to execute it and return the results. Only return the results of the executed query, not just the SQL code.
 
-      - Always enclose field names and table names in double quotes ("), even if they contain no special characters.
-      - Ensure proper SQL syntax and use best practices for readability.
+  - Always use fully qualified table names in the format [database].[schema].[table] (e.g., [master].[dbo].[Customer]).
+  - If the user's request is ambiguous, use the most recently mentioned database and table from the conversation context to infer what the user means.
+      - Always enclose field names and table names in square brackets ([ ]), even if they contain no special characters.
+      - Ensure proper SQL Server (T-SQL) syntax and use best practices for readability.
       - Maintain consistency in capitalization (e.g., SQL keywords in uppercase).
+      - Only generate queries that are safe to execute and avoid destructive operations unless explicitly requested.
     `),
   ]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Removed client-side seeding. Seed the database manually or on server startup if needed.
+
 
   async function sendMessage() {
     setIsLoading(true);

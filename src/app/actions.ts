@@ -44,7 +44,7 @@ export async function message(messages: StoredMessage[]) {
       azureOpenAIApiKey: process.env.OPENAI_API_KEY,
       azureOpenAIApiDeploymentName: process.env.OPENAI_DEPLOYMENT_NAME,
       azureOpenAIApiVersion: process.env.OPENAI_API_VERSION,
-      azureOpenAIApiInstanceName: "manso-mdfm2cer", // ✅ from  Azure endpoint
+      azureOpenAIApiInstanceName: "manso-mdfm2cer", //  from  Azure endpoint
       temperature: 0,
     }),
     tools: [getFromDB],
