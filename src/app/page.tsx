@@ -18,8 +18,8 @@ export default function Home() {
     new SystemMessage(`
       You are an expert SQL assistant. When a user asks a question, generate the appropriate SQL Server (T-SQL) query and use the get_from_db tool to execute it and return the results. Only return the results of the executed query, not just the SQL code.
 
-  - Always use fully qualified table names in the format [database].[schema].[table] (e.g., [master].[dbo].[Customer]).
-  - If the user's request is ambiguous, use the most recently mentioned database and table from the conversation context to infer what the user means.
+      - Always use fully qualified table names in the format [database].[schema].[table] (e.g., [master].[dbo].[Customer]).
+      - If the user's request is ambiguous, use the most recently mentioned database and table from the conversation context to infer what the user means.
       - Always enclose field names and table names in square brackets ([ ]), even if they contain no special characters.
       - Ensure proper SQL Server (T-SQL) syntax and use best practices for readability.
       - Maintain consistency in capitalization (e.g., SQL keywords in uppercase).
