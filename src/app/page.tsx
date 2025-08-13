@@ -14,6 +14,7 @@ import SmartResponseRenderer from "@/components/SmartResponseRenderer";
 export default function Home() {
   const [inputMessage, setInputMessage] = useState("");
   const [messages, setMessages] = useState<BaseMessage[]>([
+    new AIMessage("Hello! How can I assist you today?"),
     new SystemMessage(`
       You are an expert SQL assistant. When a user asks a question, generate the appropriate SQL Server (T-SQL) query and use the get_from_db tool to execute it and return the results. Only return the results of the executed query, not just the SQL code.
 
@@ -53,17 +54,16 @@ export default function Home() {
 
   return (
     <div className="flex flex-col h-screen">
-      <header className="bg-white p-2">
-        <div className="flex lg:flex-1 items-center justify-center">
-          <a href="#" className="m-1.5">
+      <header className="bg-white p-2 w-full">
+        <div className="w-full">
+          <a href="#" className="block w-full">
             <span className="sr-only">Natural-Language-to-SQL Agent</span>
             <img
-              className="h-8 w-auto"
-              src="/openai.svg"
-              alt="OpenAI Logo"
+              className="h-16 w-full object-cover"
+              src="/pbs image.png"
+              alt="PBS Logo"
             />
           </a>
-          <h1 className="text-black font-bold">Natural-Language-to-SQL Agent</h1>
         </div>
       </header>
       <div className="flex-1 overflow-y-auto bg-gray-100 p-6">
