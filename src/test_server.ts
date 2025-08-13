@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(cors());
 
 // Your ngrok-exposed local API
-const API_URL = process.env.API_URL || "https://9b9b28b81fa4.ngrok-free.app/api/query";
+const API_URL = process.env.API_URL || "http://localhost:5000/api/query";
 
 // Endpoint for testing SQL queries
 app.post("/test-query", async (req, res) => {
