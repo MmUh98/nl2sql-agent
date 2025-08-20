@@ -71,6 +71,7 @@ async function getSchemaSummary() {
           log.push(`Columns in ${dbName}.${schema}.${table}: ${columns.map((c: any) => c.COLUMN_NAME || c["COLUMN_NAME"]).join(", ")}`);
         } catch (e) {
           log.push(`Failed to fetch columns for ${dbName}.${schema}.${table}: ${e}`);
+          continue;
         }
         schemaInfo.push({ db: dbName, schema, table, columns: columns.map((c: { COLUMN_NAME?: string }) => c.COLUMN_NAME || c["COLUMN_NAME"]) });
       }
@@ -89,7 +90,13 @@ async function getSchemaSummary() {
 }
 
 // Run schema discovery at server startup
+// Kick off schema discovery in background at startup
 getSchemaSummary().catch(() => {});
+
+// Refresh schema summary every 30 minutes in background
+setInterval(() => {
+  getSchemaSummary().catch(err => console.error("Schema refresh failed:", err));
+}, 30 * 60 * 1000);
 
 
 export async function message(messages: StoredMessage[]) {
@@ -107,8 +114,8 @@ export async function message(messages: StoredMessage[]) {
     return match ? match[1] : null;
   }
 
-  // Always prepend schema info to system message
-  const schemaSummary = await getSchemaSummary();
+  // Prepend schema info to system message, but never block on schema discovery
+  const schemaSummary = cachedSchemaSummary || "Schema is loading in background...";
   deserialized[0].content = `${schemaSummary}\n\n${deserialized[0].content}`;
 
   // @ts-expect-error: Type instantiation is excessively deep and possibly infinite (ts2589)
@@ -137,12 +144,12 @@ export async function message(messages: StoredMessage[]) {
     },
     {
       name: "get_from_db",
-      description: `Get data from a database. The database has tables defined in the schema loaded from sample-model.sql.`,
+      description: `Get data from a SQL Server database. The schema (databases, tables, columns) is discovered dynamically at runtime.`,
       schema: z.object({
         sql: z
           .string()
           .describe(
-            "SQL query to get data from a SQL database. Always put quotes around the field and table arguments."
+            "SQL query to get data from a SQL Server database. Always put quotes around the field and table arguments."
           ),
       }),
     }
