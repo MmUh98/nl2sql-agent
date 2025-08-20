@@ -1,17 +1,33 @@
-import React from 'react';
+
+import React from "react";
 
 const SmartResponseRenderer = ({ response }: { response: string }) => {
-  // Render HTML tables and download links from backend response
+  // Detect tables
   if (/<table[\s\S]*<\/table>/.test(response)) {
-    // HTML table
-    return <div dangerouslySetInnerHTML={{ __html: response }} />;
+    return (
+      <div className="chat-bubble">
+        <div className="table-scroll">
+          <div
+            className="table-container"
+            dangerouslySetInnerHTML={{
+              __html: response.replace(
+                /<table/g,
+                '<table class="styled-table"'
+              ),
+            }}
+          />
+        </div>
+      </div>
+    );
   }
-  // Render download link if present
+
+  // Detect download links
   if (/<a [^>]*download=[^>]*>.*<\/a>/.test(response)) {
-    return <div dangerouslySetInnerHTML={{ __html: response }} />;
+    return <div className="chat-bubble" dangerouslySetInnerHTML={{ __html: response }} />;
   }
-  // Fallback: plain text
-  return <div className="text-sm whitespace-pre-line">{response}</div>;
+
+  // Fallback plain text
+  return <div className="chat-bubble text-sm whitespace-pre-line">{response}</div>;
 };
 
 export default SmartResponseRenderer;

@@ -90,7 +90,7 @@ export default function Home() {
         </div>
       </header>
       <div
-        className="flex-1 overflow-y-auto bg-gray-100 p-6 relative"
+        className="flex-1 overflow-y-auto overflow-x-hidden bg-gray-100 py-6 px-2 relative"
         ref={chatContainerRef}
         onScroll={handleScroll}
       >
