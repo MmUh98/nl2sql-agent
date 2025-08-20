@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   HumanMessage,
   SystemMessage,
@@ -27,8 +27,31 @@ export default function Home() {
     `),
   ]);
   const [isLoading, setIsLoading] = useState(false);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+  const [showScrollButton, setShowScrollButton] = useState(false);
 
+  // Scroll to bottom when messages change
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+      setShowScrollButton(false);
+    }
+  }, [messages]);
 
+  // Show button if not at bottom
+  const handleScroll = () => {
+    if (chatContainerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
+      setShowScrollButton(scrollHeight - scrollTop - clientHeight > 50);
+    }
+  };
+
+  const scrollToBottom = () => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTo({ top: chatContainerRef.current.scrollHeight, behavior: "smooth" });
+      setShowScrollButton(false);
+    }
+  };
 
   async function sendMessage() {
     setIsLoading(true);
@@ -66,7 +89,11 @@ export default function Home() {
           </a>
         </div>
       </header>
-      <div className="flex-1 overflow-y-auto bg-gray-100 p-6">
+      <div
+        className="flex-1 overflow-y-auto bg-gray-100 p-6 relative"
+        ref={chatContainerRef}
+        onScroll={handleScroll}
+      >
         <div className="flex flex-col">
           {messages.length > 0 &&
             messages.map((message, index) => {
@@ -74,13 +101,13 @@ export default function Home() {
                 return (
                   <div
                     key={message.getType() + index}
-                    className="col-start-1 col-end-8 p-3 rounded-lg"
+                    className="col-start-6 col-end-13 p-3 rounded-lg"
                   >
-                    <div className="flex flex-row items-center">
+                    <div className="flex items-center justify-start flex-row-reverse">
                       <div className="flex items-center justify-center h-8 w-8 rounded-full bg-orange-400 text-white flex-shrink-0 text-sm">
                         Me
                       </div>
-                      <div className="relative ml-3 text-sm bg-white text-black py-2 px-4 shadow rounded-xl">
+                      <div className="relative mr-3 text-sm bg-white text-black py-2 px-4 shadow rounded-xl min-w-[250px]">
                         <div>{message.content as string}</div>
                       </div>
                     </div>
@@ -92,13 +119,13 @@ export default function Home() {
                 return (
                   <div
                     key={message.getType() + index}
-                    className="col-start-6 col-end-13 p-3 rounded-lg"
+                    className="col-start-1 col-end-8 p-3 rounded-lg"
                   >
-                    <div className="flex items-center justify-start flex-row-reverse">
+                    <div className="flex flex-row items-center">
                       <div className="flex items-center justify-center h-8 w-8 rounded-full bg-green-400 flex-shrink-0 text-sm">
                         AI
                       </div>
-                      <div className="relative mr-3 text-sm bg-white text-black py-2 px-4 shadow rounded-xl min-w-[250px]">
+                      <div className="relative ml-3 text-sm bg-white text-black py-2 px-4 shadow rounded-xl">
                         <SmartResponseRenderer response={message.content as string} />
                       </div>
                     </div>
@@ -107,6 +134,18 @@ export default function Home() {
               }
             })}
         </div>
+        {showScrollButton && (
+          <button
+            onClick={scrollToBottom}
+            className="fixed bottom-28 right-8 bg-indigo-500 text-white px-4 py-2 rounded-full shadow-lg hover:bg-indigo-600 transition flex items-center justify-center"
+            style={{ zIndex: 50 }}
+            aria-label="Scroll to Bottom"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+        )}
       </div>
       <div className="bg-white p-6">
         <div className="flex flex-row items-center h-16 rounded-xl w-full">
