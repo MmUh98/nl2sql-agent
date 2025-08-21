@@ -1,4 +1,14 @@
 "use server";
+import { AzureChatOpenAI } from "@langchain/openai";
+import { createReactAgent } from "@langchain/langgraph/prebuilt";
+import { tool } from "@langchain/core/tools";
+import { z } from "zod";
+import {
+  mapStoredMessagesToChatMessages,
+  StoredMessage,
+} from "@langchain/core/messages";
+import { execute } from "./database";
+
 
 // Step 1: Detect download requests in the user prompt
 // Step 2: Helper to format SQL results as HTML table
@@ -23,15 +33,6 @@ function toCSV(data: any[]): string {
   return csvRows.join("\r\n");
 }
 
-import { AzureChatOpenAI } from "@langchain/openai";
-import { createReactAgent } from "@langchain/langgraph/prebuilt";
-import { tool } from "@langchain/core/tools";
-import { z } from "zod";
-import {
-  mapStoredMessagesToChatMessages,
-  StoredMessage,
-} from "@langchain/core/messages";
-import { execute } from "./database";
 
 
 // Cache for schema summary
@@ -91,7 +92,7 @@ async function getSchemaSummary() {
 
 // Run schema discovery at server startup
 // Kick off schema discovery in background at startup
-getSchemaSummary().catch(() => {});
+getSchemaSummary().catch(() => { });
 
 // Refresh schema summary every 30 minutes in background
 setInterval(() => {
@@ -117,10 +118,9 @@ export async function message(messages: StoredMessage[]) {
   // Prepend schema info to system message, but never block on schema discovery
   const schemaSummary = cachedSchemaSummary || "Schema is loading in background...";
   deserialized[0].content = `${schemaSummary}\n\n${deserialized[0].content}`;
-
   // @ts-expect-error: Type instantiation is excessively deep and possibly infinite (ts2589)
   const getFromDB = tool(
-    async (input) => {
+    async (input: any): Promise<string | null> => {
       if (input?.sql) {
         console.log({ sql: input.sql });
         const result = await execute(input.sql);
@@ -154,9 +154,9 @@ export async function message(messages: StoredMessage[]) {
       }),
     }
   );
- 
+
   // @ts-expect-error: Type instantiation is excessively deep and possibly infinite (ts2589)
-  
+
   const agent = createReactAgent({
     llm: new AzureChatOpenAI({
       azureOpenAIApiKey: process.env.OPENAI_API_KEY,
